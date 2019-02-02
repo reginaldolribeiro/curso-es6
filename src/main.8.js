@@ -15,6 +15,20 @@ class App {
         this.formElement.onsubmit = event => this.addRepository(event);
     }
 
+    // addRepository(event){
+    //     event.preventDefault();
+
+    //     this.repositories.push({
+    //         name: 'Reginaldo Luiz Ribeiro Filho',
+    //         description: 'Github Reginaldo',
+    //         avatar_url: 'https://avatars3.githubusercontent.com/u/5490660?v=4',
+    //         html_url: 'https://github.com/reginaldolribeiro',
+    //     });
+
+    //     this.render();
+    //     console.log(this.repositories);
+    // }
+
     async addRepository(event){
         event.preventDefault();
 
@@ -24,7 +38,7 @@ class App {
             return;
 
         const response = await api.get(`/repos/${repoInput}`);
-        //console.log(response);
+        console.log(response);
 
         // Desestruturacao
         const { name, description, html_url, owner: { avatar_url } } = response.data;
