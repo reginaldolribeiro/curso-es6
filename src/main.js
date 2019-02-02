@@ -15,6 +15,18 @@ class App {
         this.formElement.onsubmit = event => this.addRepository(event);
     }
 
+    setLoading(loading=true){
+        if(loading === true){
+            let loadingElement = document.createElement('span');
+            loadingElement.appendChild(document.createTextNode('Carregando...'));
+            loadingElement.setAttribute('id','loading');
+
+            this.formElement.appendChild(loadingElement);
+        } else {
+            document.getElementById('loading').remove();
+        }
+    }
+
     async addRepository(event){
         event.preventDefault();
 
@@ -23,30 +35,39 @@ class App {
         if(repoInput.length === 0)
             return;
 
-        const response = await api.get(`/repos/${repoInput}`);
-        //console.log(response);
+        this.setLoading();         
 
-        // Desestruturacao
-        const { name, description, html_url, owner: { avatar_url } } = response.data;
+        try {
+            const response = await api.get(`/repos/${repoInput}`);
+            //console.log(response);
 
-        this.repositories.push({
-            name,
-            description,
-            avatar_url,
-            html_url,
-        });
+            // Desestruturacao
+            const { name, description, html_url, owner: { avatar_url } } = response.data;
 
-        // this.repositories.push({
-        //     name: response.data.name,
-        //     description: response.data.description,
-        //     avatar_url: response.data.owner.avatar_url,
-        //     html_url: response.data.html_url,
-        // });
+            this.repositories.push({
+                name,
+                description,
+                avatar_url,
+                html_url,
+            });
 
-        this.inputElement.value = '';
+            // this.repositories.push({
+            //     name: response.data.name,
+            //     description: response.data.description,
+            //     avatar_url: response.data.owner.avatar_url,
+            //     html_url: response.data.html_url,
+            // });
 
-        this.render();
-        console.log(this.repositories);
+            this.inputElement.value = '';
+
+            this.render();
+            console.log(this.repositories);
+        } catch (error){
+            console.log('Error');
+            alert('O repositorio nao existe.');
+        }
+
+        this.setLoading(false);
     }
 
     render(){
